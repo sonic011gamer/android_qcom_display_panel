@@ -90,7 +90,9 @@ It generates dsi-panel-nt35596-1080p-video.dtsi and panle_nt35596_1080p_video.h
 files. Dtsi file should be copied to dts folder in kernel while header file
 should be copied to bootloader GCDB header file database.
 
-
+For dualdsi panels you should probably do 2 seperate panels as I did for Duke.
+After generating the 2nd panel you can take the node and copy it after the dsi0 one, then including it in the main dtsi.
+For LK panel header, you should not split the width, as LK does that for you.
 
 Generate Platform dtsi/header file
 ---------------------------

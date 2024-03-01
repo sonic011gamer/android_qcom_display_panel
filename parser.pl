@@ -307,6 +307,19 @@ if(uc($ARGV[1]) eq "PANEL")
 			printBoolean($PANELDTSI, \@tmp, $property,
 				"qcom,mdss-dsi-" . $lower);
 		}
+
+		@attrs = ("CmdSyncWaitBroadcast", "CmdSyncWaitTrigger");
+
+		foreach(@attrs)
+		{
+			push(my @tmp, $_);
+			my $lower = $_;
+			$lower =~ s/DSI//g;
+			$lower = convertLower($lower);
+			printBoolean($PANELDTSI, \@tmp, $property,
+				"qcom," . $lower);
+		}
+
 	}
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
@@ -322,8 +335,7 @@ if(uc($ARGV[1]) eq "PANEL")
 					lc($nameinH) . "_command_panel");
 		print $PANELH "\n\n";
 
-		@attrs = ("TEPinSelect", "AutoRefreshEnable", "AutoRefreshFrameNumDiv",
-		"TEvSyncRdPtrIrqLine", "TEvSyncContinuesLines",
+		@attrs = ("TEPinSelect", "TEvSyncRdPtrIrqLine", "TEvSyncContinuesLines",
 		"TEvSyncStartLineDivisor", "TEPercentVariance", "TEDCSCommand",
 		"DisableEoTAfterHSXfer", "CmdModeIdleTime");
 
@@ -338,12 +350,12 @@ if(uc($ARGV[1]) eq "PANEL")
 			elsif($_ eq "TEvSyncRdPtrIrqLine")
 			{
 				printArray($PANELDTSI, \@tmp, $property,
-					"qcom,mdss-dsi-te-v-sync-rd-ptr-irq-line");
+					"qcom,mdss-dsi-wr-mem-start");
 			}
 			elsif($_ eq "TEvSyncContinuesLines")
 			{
 				printArray($PANELDTSI, \@tmp, $property,
-					"qcom,mdss-dsi-te-v-sync-continues-lines");
+					"qcom,mdss-dsi-wr-mem-continue");
 			}
 			elsif($_ eq "TEvSyncStartLineDivisor")
 			{
@@ -460,16 +472,19 @@ if(uc($ARGV[1]) eq "PANEL")
 						lc($nameinH) . "_backlight");
 		print $PANELH "\n";
 
-		my @attrs = ("TClkPost", "TClkPre");
-
+		my @attrs = ("TClkPost");
 		foreach(@attrs)
 		{
 			push(my @tmp, $_);
-			my $lower = $_;
-			$lower =~ s/DSI//g;
-			$lower = convertLower($lower);
 			printArray($PANELDTSI, \@tmp, $property,
-					"qcom,mdss-dsi-" . $lower);
+					"qcom,mdss-dsi-t-clk-pre");
+		}
+		@attrs = ("TClkPre");
+		foreach(@attrs)
+		{
+			push(my @tmp, $_);
+			printArray($PANELDTSI, \@tmp, $property,
+					"qcom,mdss-dsi-t-clk-post");
 		}
 
 		@attrs = ("BLMinLevel");
@@ -563,6 +578,19 @@ if(uc($ARGV[1]) eq "PANEL")
 			printResetSeq($PANELDTSI, $tmpProperty,
 					"qcom,mdss-dsi-reset-sequence");
 			print $PANELDTSI "\n";
+		}
+
+		# Add cont splash here, cuts work in the dts.
+		@attrs = ("ContSplashEnabled");
+
+		foreach(@attrs)
+		{
+			push(my @tmp, $_);
+			my $lower = $_;
+			$lower =~ s/DSI//g;
+			$lower = convertLower($lower);
+			printBoolean($PANELDTSI, \@tmp, $property,
+				"qcom," . $lower);
 		}
 	}
 
