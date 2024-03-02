@@ -592,6 +592,17 @@ if(uc($ARGV[1]) eq "PANEL")
 			printBoolean($PANELDTSI, \@tmp, $property,
 				"qcom," . $lower);
 		}
+		@attrs = ("ForceClockLaneHs");
+
+		foreach(@attrs)
+		{
+			push(my @tmp, $_);
+			my $lower = $_;
+			$lower =~ s/DSI//g;
+			$lower = convertLower($lower);
+			printBoolean($PANELDTSI, \@tmp, $property,
+				"qcom,mdss-dsi-" . $lower);
+		}
 	}
 
 	print $PANELH "\n#endif /*_PANEL_" . uc($nameinH) . "_H_*/\n";
